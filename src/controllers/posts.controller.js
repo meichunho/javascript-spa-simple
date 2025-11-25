@@ -1,4 +1,4 @@
-import view from '../view/posts.html';
+import view from "../view/posts.html";
 
 const getPosts = async () => {
   const response = await fetch("https://jsonplaceholder.typicode.com/posts");
@@ -10,7 +10,7 @@ export default async () => {
   divElement.innerHTML = view;
 
   const postsElement = divElement.querySelector("#posts");
-  const totalPosts = divElement.querySelector('#total');
+  const totalPosts = divElement.querySelector("#total");
 
   const posts = await getPosts();
 
