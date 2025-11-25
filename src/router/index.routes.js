@@ -1,4 +1,4 @@
-import { pages } from "../controllers/index";
+import { pages } from "../controllers/index.js";
 
 const router = async (route) => {
   let content = document.getElementById("root");

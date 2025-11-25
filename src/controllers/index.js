@@ -1,6 +1,6 @@
-import Home from "./home.controller";
-import Posts from "./posts.controller";
-import NotFound from "./404.controller";
+import Home from "./home.controller.js";
+import Posts from "./posts.controller.js";
+import NotFound from "./404.controller.js";
 
 const pages = {
   home: Home,
