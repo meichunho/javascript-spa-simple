@@ -6,14 +6,30 @@ module.exports = {
   entry: "./src/main.js",
   output: {
     path: path.resolve(__dirname, "../dist"),
-    filename: "bundle.js",
+    filename: "[name].[contenthash].js",
   },
   mode: "production",
+  optimization: {
+    splitChunks: {
+      chunks: "all",
+      cacheGroups: {
+        vendors: {
+          test: /[\\/]node_modules[\\/]/,
+          name: "vendors",
+          chunks: "all",
+          priority: -10
+        }
+      }
+    },
+    runtimeChunk: {
+      name: "runtime"
+    }
+  },
   plugins: [
     new HtmlWebpackPlugin({
       template: "./src/index.html",
     }),
-    new MiniCssExtractPlugin(),
+    new MiniCssExtractPlugin({ filename: "[name].[contenthash].css" }),
   ],
   module: {
     rules: [
@@ -34,8 +50,15 @@ module.exports = {
           },
           // Translates CSS into CommonJS
           "css-loader",
-          // Compiles Sass to CSS
-          "sass-loader",
+          // Compiles Sass to CSS (explicit `sass` implementation and source maps)
+          {
+            loader: "sass-loader",
+            options: {
+              implementation: require("sass"),
+              sourceMap: true,
+              api: "modern",
+            },
+          },
         ],
       },
       {
@@ -44,5 +67,11 @@ module.exports = {
       },
     ],
   },
-  devtool: "eval-source-map",
+  devtool: "source-map",
+  performance: {
+    hints: "warning",
+    // keep recommended sizes but you can tune these to your app's needs
+    maxEntrypointSize: 244000,
+    maxAssetSize: 244000
+  },
 };
