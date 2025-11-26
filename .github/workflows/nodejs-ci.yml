@@ -7,10 +7,9 @@ on:
     branches: [ master, main ]
 
 jobs:
-  build:
-    name: Install and build
+  setup:
+    name: Setup environment
     runs-on: ubuntu-latest
-
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
@@ -24,6 +23,11 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
+  quality-checks:
+    name: Quality checks
+    runs-on: ubuntu-latest
+    needs: setup
+    steps:
       - name: Audit dependencies (fail on high/critical)
         run: |
           echo "Running npm audit via npm script and failing on high/critical vulnerabilities"
@@ -37,11 +41,22 @@ jobs:
       - name: Lint
         run: npm run lint --if-present
 
-      - name: Build
-        run: npm run build --if-present
-
+  test:
+    name: Run tests
+    runs-on: ubuntu-latest
+    needs: setup
+    steps:
       - name: Run tests
         run: npm test --if-present
+
+  build:
+    name: Build project
+    runs-on: ubuntu-latest
+    needs: test
+    steps:
+
+      - name: Build
+        run: npm run build --if-present
 
       - name: Archive build artifact
         run: |
@@ -51,6 +66,24 @@ jobs:
             echo "No dist directory found, skipping artifact archive";
             exit 1;
           fi
+
+      - name: Upload build artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: build-artifact
+          path: app-${{ github.run_id }}.zip
+          retention-days: 1
+
+  release:
+    name: Create release
+    runs-on: ubuntu-latest
+    needs: build
+    steps:
+      - name: Download build artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: build-artifact
+          path: .
 
       - name: Create GitHub Release
         uses: softprops/action-gh-release@v2
@@ -67,7 +100,7 @@ jobs:
   deploy:
     name: Download artifact and Deploy to Azure Web App
     runs-on: ubuntu-latest
-    needs: build
+    needs: release
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
