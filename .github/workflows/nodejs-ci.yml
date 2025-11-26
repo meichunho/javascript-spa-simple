@@ -45,8 +45,8 @@ jobs:
 
       - name: Archive build artifact
         run: |
-          if [ -d dist ]; then
-            zip -r app-${{ github.run_id }}.zip dist;
+          if [ -d webpack/dist ]; then
+            zip -r app-${{ github.run_id }}.zip webpack/dist;
           else
             echo "No dist directory found, skipping artifact archive";
             exit 1;
