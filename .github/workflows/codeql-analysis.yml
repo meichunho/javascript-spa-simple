@@ -38,6 +38,3 @@ jobs:
 
       - name: Run CodeQL analysis
         uses: github/codeql-action/analyze@v3
-        with:
-          # You can set the SARIF output or extra options here if needed
-          disable-queries: false
