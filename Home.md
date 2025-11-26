@@ -135,13 +135,15 @@ graph TD
     
     NodeCI --> QC[Quality Checks<br/>- Audit<br/>- Check Updates<br/>- Lint]
     NodeCI --> Test[Run Tests]
+    NodeCI --> SecretScan[Secret Scanning<br/>Gitleaks]
     
     QC --> Build[Build Project]
     Test --> Build
+    SecretScan --> Build
     
     Build --> Archive[Archive Artifact]
     Archive --> Release[Create GitHub Release]
-    Release --> Deploy[Deploy to Azure<br/>Currently Disabled]
+    Release --> Deploy[Deploy to Azure<br/>Main branch only]
     
     CodeQL --> Init[Initialize CodeQL]
     Init --> AutoBuild[Autobuild]
@@ -152,9 +154,10 @@ graph TD
     style CodeQL fill:#fff9c4
     style QC fill:#e3f2fd
     style Test fill:#e3f2fd
+    style SecretScan fill:#ffebee
     style Build fill:#f3e5f5
     style Release fill:#ffe0b2
-    style Deploy fill:#ffcdd2,stroke-dasharray: 5 5
+    style Deploy fill:#c5e1a5
     style Analyze fill:#fff9c4
 ```
 
@@ -164,9 +167,11 @@ graph TD
 - Runs security audits
 - Checks for dependency updates
 - Lints code
+- Scans for secrets using Gitleaks
 - Builds the project
 - Runs tests
 - Creates GitHub releases with build artifacts
+- Deploys to Azure (main branch only)
 
 ### CodeQL Analysis (`codeql-analysis.yml`)
 - Performs security analysis using CodeQL
