@@ -55,7 +55,7 @@ jobs:
       - name: Create GitHub Release
         uses: softprops/action-gh-release@v2
         with:
-          tag: artifact-${{ github.run_id }}
+          tag_name: artifact-${{ github.run_id }}
           name: Artifact ${{ github.run_id }}
           body: "Build artifact for run ${{ github.run_id }}"
           draft: false
