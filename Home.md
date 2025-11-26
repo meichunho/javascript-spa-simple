@@ -126,6 +126,38 @@ Tests are located in the `test/` directory and follow the pattern `*.test.js`.
 
 The project includes GitHub Actions workflows for:
 
+### Pipeline Overview
+
+```mermaid
+graph TD
+    Start([Push/PR to main/master]) --> NodeCI[Node.js CI Workflow]
+    Start --> CodeQL[CodeQL Analysis Workflow]
+    
+    NodeCI --> QC[Quality Checks<br/>- Audit<br/>- Check Updates<br/>- Lint]
+    NodeCI --> Test[Run Tests]
+    
+    QC --> Build[Build Project]
+    Test --> Build
+    
+    Build --> Archive[Archive Artifact]
+    Archive --> Release[Create GitHub Release]
+    Release --> Deploy[Deploy to Azure<br/>Currently Disabled]
+    
+    CodeQL --> Init[Initialize CodeQL]
+    Init --> AutoBuild[Autobuild]
+    AutoBuild --> Analyze[Run CodeQL Analysis]
+    
+    style Start fill:#e1f5ff
+    style NodeCI fill:#c8e6c9
+    style CodeQL fill:#fff9c4
+    style QC fill:#e3f2fd
+    style Test fill:#e3f2fd
+    style Build fill:#f3e5f5
+    style Release fill:#ffe0b2
+    style Deploy fill:#ffcdd2,stroke-dasharray: 5 5
+    style Analyze fill:#fff9c4
+```
+
 ### Node.js CI (`nodejs-ci.yml`)
 - Runs on pushes and pull requests to `main`/`master` branches
 - Installs dependencies
@@ -140,6 +172,8 @@ The project includes GitHub Actions workflows for:
 - Performs security analysis using CodeQL
 - Runs on push, pull requests, and weekly schedule
 - Analyzes JavaScript code for security vulnerabilities
+
+
 
 ## Architecture
 
