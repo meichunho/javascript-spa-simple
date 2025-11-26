@@ -26,17 +26,18 @@ jobs:
         uses: actions/checkout@v4
 
       - name: Initialize CodeQL
-        uses: github/codeql-action/init@v2
+        uses: github/codeql-action/init@v3
         with:
           languages: ${{ matrix.language }}
           # You can customize queries here if desired, for example:
-          # queries: security-and-quality
+          queries: security-and-quality
+          packs: codeql/javascript-all
 
       - name: Autobuild
-        uses: github/codeql-action/autobuild@v2
+        uses: github/codeql-action/autobuild@v3
 
       - name: Run CodeQL analysis
-        uses: github/codeql-action/analyze@v2
+        uses: github/codeql-action/analyze@v3
         with:
           # You can set the SARIF output or extra options here if needed
           disable-queries: false
