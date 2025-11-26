@@ -53,26 +53,16 @@ jobs:
           fi
 
       - name: Create GitHub Release
-        id: create_release
-        uses: actions/create-release@v1
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        uses: softprops/action-gh-release@v2
         with:
-          tag_name: artifact-${{ github.run_id }}
-          release_name: Artifact ${{ github.run_id }}
+          tag: artifact-${{ github.run_id }}
+          name: Artifact ${{ github.run_id }}
           body: "Build artifact for run ${{ github.run_id }}"
           draft: false
           prerelease: true
-
-      - name: Upload release asset
-        uses: actions/upload-release-asset@v1
+          files: app-${{ github.run_id }}.zip
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: app-${{ github.run_id }}.zip
-          asset_name: app-${{ github.run_id }}.zip
-          asset_content_type: application/zip
 
   deploy:
     name: Download artifact and Deploy to Azure Web App
